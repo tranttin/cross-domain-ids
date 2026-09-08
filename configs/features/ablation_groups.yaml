@@ -1,0 +1,45 @@
+version: "0.4.2-diagnostic-ablation-2026-08-19"
+policy: >-
+  These groups are for TARGET-LABELLED DIAGNOSTIC ABLATION only. Do not choose the
+  final manuscript feature set by maximizing target-test performance. Final feature
+  inclusion must be justified independently by semantics/unit verification.
+
+groups:
+  full_candidate:
+    description: All currently resolved candidate canonical features.
+
+  no_rst_urg:
+    description: Quarantine RST/URG counts, whose v0.4.1 scaled distributions were extreme.
+    exclude:
+      - rst_flag_count
+      - urg_flag_count
+
+  rates_lengths_core:
+    description: Duration, rates and packet-length statistics only; excludes all TCP flag counts.
+    include:
+      - flow_duration
+      - flow_packets_per_second
+      - forward_packets_per_second
+      - backward_packets_per_second
+      - packet_length_min
+      - packet_length_max
+      - packet_length_mean
+      - packet_length_std
+
+  no_flags:
+    description: Alias-like semantic core excluding all FIN/SYN/RST/ACK/URG count mappings.
+    exclude:
+      - fin_flag_count
+      - syn_flag_count
+      - rst_flag_count
+      - ack_flag_count
+      - urg_flag_count
+
+  flags_only:
+    description: Diagnostic only; isolates the five candidate TCP-flag count mappings.
+    include:
+      - fin_flag_count
+      - syn_flag_count
+      - rst_flag_count
+      - ack_flag_count
+      - urg_flag_count

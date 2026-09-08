@@ -1,0 +1,84 @@
+version: "0.5.2-paper-matrix-E6-dirty-baseline-2026-09-02"
+
+paper:
+  smoke_seed: 42
+  final_seeds: [42, 43, 44]
+  main_dann_lambda: 0.01
+  domain_loss_weight: 0.5
+  target_threshold_strategy: gmm_logit
+  lambda_sweep: [0.0, 0.001, 0.005, 0.01, 0.05, 0.1]
+  attack_epsilons: [0.0, 0.01, 0.03, 0.05, 0.1]
+  e6_constraint_config: configs/robustness/e6_constraints_v051.yaml
+
+# Final-paper CICIoT2023 runs should use DEV for unlabeled adaptation and FINAL_TEST
+# only for evaluation. These files are deliberately separate from the earlier
+# ciciot2023_sample.csv diagnostic file.
+datasets:
+  CICIDS2017:
+    name: "2017"
+    csv: data/processed/cicids2017_balanced_77feats.csv
+  CICIDS2018:
+    name: "2018"
+    csv: data/processed/cleaned_data_sampled.csv
+  CICIoT2023_DIAGNOSTIC:
+    name: CICIoT2023
+    csv: data/processed/ciciot2023_sample.csv
+  CICIoT2023_DEV:
+    name: CICIoT2023
+    csv: data/processed/ciciot2023_dev.csv
+  CICIoT2023_FINAL_TEST:
+    name: CICIoT2023
+    csv: data/processed/ciciot2023_final_test.csv
+
+protocol_gates:
+  require_clean_python_env_for_final: true
+  require_verified_canonical_mapping_for_final: true
+  canonical_mapping: configs/features/canonical_features.yaml
+  forbidden_tensorflow_path_fragment: LightGCN
+
+stages:
+  E0:
+    title: Protocol freeze / final-data gate
+    output: protocol_gate
+  E1:
+    title: In-domain benchmark
+    paper_table: T2_InDomain
+    datasets: [CICIDS2017, CICIDS2018, CICIoT2023_DEV]
+    models: [NaiveBayes, SGDClassifier, LogisticRegression, DecisionTree, RandomForest, CNN-BiLSTM-Attention]
+  E2:
+    title: Related-domain CIC transfer
+    paper_table: T3_CIC_CrossDomain
+    pairs:
+      - [CICIDS2017, CICIDS2018]
+      - [CICIDS2018, CICIDS2017]
+    models: [LogisticRegression, RandomForest, CNN-BiLSTM-Attention, Clean-DANN]
+  E3:
+    title: Heterogeneous transfer to IoT
+    paper_table: T4_Heterogeneous_Transfer
+    pairs:
+      - [CICIDS2017, CICIoT2023_DEV]
+      - [CICIDS2018, CICIoT2023_DEV]
+    models: [LogisticRegression, RandomForest, MLP-BN-Canonical, MLP-BN-DANN]
+  E4:
+    title: Multi-source unseen IoT transfer
+    paper_table: T5_MultiSource
+    source: [CICIDS2017, CICIDS2018]
+    target: CICIoT2023_DEV
+    models: [MLP-BN-Canonical, MLP-BN-DANN]
+  E5:
+    title: DANN lambda sensitivity
+    paper_figure: F3_LambdaSensitivity
+    pair: [CICIDS2018, CICIoT2023_DIAGNOSTIC]
+    lambdas: [0.0, 0.001, 0.005, 0.01, 0.05, 0.1]
+    note: Diagnostic/development ablation only; do not select hyperparameters on final test.
+  E6:
+    title: Adversarial robustness
+    paper_table: T6_Robustness
+    paper_figure: F4_AttackEpsilon
+    scenarios:
+      - in_domain_2018
+      - 2018_to_CICIoT2023
+    attacks: [fgsm, pgd]
+    epsilons: [0.0, 0.01, 0.03, 0.05, 0.1]
+    status: constraint_aware_final_enabled
+    models: [CNN-BiLSTM-Attention, Canonical-MLP, Canonical-MLP-DANN, Canonical-MLP-AT, Canonical-MLP-DANN-AT]

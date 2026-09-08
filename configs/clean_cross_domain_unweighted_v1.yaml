@@ -1,0 +1,30 @@
+experiment: clean_cross_domain
+protocol: clean_uda
+seed: 42
+
+data:
+  cic2018_csv: data/processed/cleaned_data_sampled.csv
+  cic2017_csv: data/processed/cicids2017_balanced_77feats.csv
+  test_size: 0.2
+  validation_size: 0.1
+
+preprocessing:
+  variance_threshold: 0.01
+  robust_quantile_range: [5, 95]
+  feature_order: sorted
+  feature_alignment: exact
+  # In clean mode the selector/scaler are fit on the labelled source train only.
+  fit_reference_domain: source
+
+deep:
+  learning_rate: 0.001
+  dann_learning_rate: 0.0001
+  batch_size: 256
+  epochs: 30
+  patience: 5
+  lambda_d: 1.0
+  domain_loss_weight: 0.5
+
+uda:
+  target_labels_used_for_training: false
+  target_labels_used_for_model_selection: false

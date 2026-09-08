@@ -1,0 +1,186 @@
+version: 0.4.1-candidate-map-2026-08-19
+policy: CICIoT2023 mappings in this file are SEMANTIC CANDIDATES grounded in the published
+  feature descriptions, but remain verified=false until their units, directionality
+  and aggregation behavior are checked on the exact prepared files used in this repository.
+  Use --allow-unverified-mapping only for diagnostics/smoke experiments; never report
+  those runs as final paper evidence.
+features:
+  flow_duration:
+    description: Flow/session duration. CICIoT2023 uses flow_duration; its separate
+      Duration column is TTL and MUST NOT be mapped here.
+    mappings:
+      '2017':
+        column: Flow Duration
+        verified: true
+      '2018':
+        column: Flow Duration
+        verified: true
+      CICIoT2023:
+        column: flow_duration
+        verified: false
+        note: Semantic match; verify units/aggregation on prepared files.
+  flow_packets_per_second:
+    description: Aggregate packet transmission rate in a flow.
+    mappings:
+      '2017':
+        column: Flow Packets/s
+        verified: true
+      '2018':
+        column: Flow Pkts/s
+        verified: true
+      CICIoT2023:
+        column: Rate
+        verified: true
+        note: Semantic candidate; verify rate definition/window.
+  forward_packets_per_second:
+    description: Forward/outbound packet transmission rate.
+    mappings:
+      '2017':
+        column: Fwd Packets/s
+        verified: true
+      '2018':
+        column: Fwd Pkts/s
+        verified: true
+      CICIoT2023:
+        column: Srate
+        verified: true
+        note: Forward vs outbound direction must be verified.
+  backward_packets_per_second:
+    description: Backward/inbound packet transmission rate.
+    mappings:
+      '2017':
+        column: Bwd Packets/s
+        verified: true
+      '2018':
+        column: Bwd Pkts/s
+        verified: true
+      CICIoT2023:
+        column: Drate
+        verified: true
+        note: Backward vs inbound direction must be verified.
+  packet_length_min:
+    description: Minimum packet length statistic for the flow/window.
+    mappings:
+      '2017':
+        column: Min Packet Length
+        verified: true
+      '2018':
+        column: Pkt Len Min
+        verified: true
+      CICIoT2023:
+        column: Min
+        verified: true
+        note: Semantic candidate; verify aggregation window.
+  packet_length_max:
+    description: Maximum packet length statistic for the flow/window.
+    mappings:
+      '2017':
+        column: Max Packet Length
+        verified: true
+      '2018':
+        column: Pkt Len Max
+        verified: true
+      CICIoT2023:
+        column: Max
+        verified: true
+        note: Semantic candidate; verify aggregation window.
+  packet_length_mean:
+    description: Mean/average packet length statistic for the flow/window.
+    mappings:
+      '2017':
+        column: Packet Length Mean
+        verified: true
+      '2018':
+        column: Pkt Len Mean
+        verified: true
+      CICIoT2023:
+        column: AVG
+        verified: true
+        note: Semantic candidate; verify aggregation window.
+  packet_length_std:
+    description: Standard deviation of packet length for the flow/window.
+    mappings:
+      '2017':
+        column: Packet Length Std
+        verified: true
+      '2018':
+        column: Pkt Len Std
+        verified: true
+      CICIoT2023:
+        column: Std
+        verified: true
+        note: Semantic candidate; verify aggregation window.
+  fin_flag_count:
+    description: Count of packets with FIN flag set in the flow.
+    mappings:
+      '2017':
+        column: FIN Flag Count
+        verified: true
+      '2018':
+        column: FIN Flag Cnt
+        verified: true
+      CICIoT2023:
+        column: fin_count
+        verified: false
+        note: Use fin_count, not fin_flag_number (flag value).
+  syn_flag_count:
+    description: Count of packets with SYN flag set in the flow.
+    mappings:
+      '2017':
+        column: SYN Flag Count
+        verified: true
+      '2018':
+        column: SYN Flag Cnt
+        verified: true
+      CICIoT2023:
+        column: syn_count
+        verified: false
+        note: Use syn_count, not syn_flag_number (flag value).
+  rst_flag_count:
+    description: Count of packets with RST flag set in the flow.
+    mappings:
+      '2017':
+        column: RST Flag Count
+        verified: true
+      '2018':
+        column: RST Flag Cnt
+        verified: true
+      CICIoT2023:
+        column: rst_count
+        verified: false
+        note: Use rst_count, not rst_flag_number (flag value).
+  ack_flag_count:
+    description: Count of packets with ACK flag set in the flow.
+    mappings:
+      '2017':
+        column: ACK Flag Count
+        verified: true
+      '2018':
+        column: ACK Flag Cnt
+        verified: true
+      CICIoT2023:
+        column: ack_count
+        verified: false
+        note: Use ack_count, not ack_flag_number (flag value).
+  urg_flag_count:
+    description: Count of packets with URG flag set in the flow.
+    mappings:
+      '2017':
+        column: URG Flag Count
+        verified: true
+      '2018':
+        column: URG Flag Cnt
+        verified: true
+      CICIoT2023:
+        column: urg_count
+        verified: false
+        note: Semantic candidate; verify aggregation behavior.
+  flow_bytes_per_second:
+    description: Aggregate byte rate. No CICIoT2023 mapping is asserted by default.
+    mappings:
+      '2017':
+        column: Flow Bytes/s
+        verified: true
+      '2018':
+        column: Flow Byts/s
+        verified: true

@@ -1,0 +1,67 @@
+datasets:
+  cse_cic_ids2018_processed:
+    family: CIC-IDS
+    year: 2018
+    role: legacy_reproduction
+    download:
+      kind: kaggle
+      slug: hunglevinh/cse-cic-ids2018-cleaned-40k-samples-each
+    expected_files:
+      - cleaned_data_sampled.csv
+    expected_shape: [360000, 79]
+    notes: "Processed 9-class x 40k dataset referenced by the original notebook."
+
+  cic_ids2017_processed:
+    family: CIC-IDS
+    year: 2017
+    role: legacy_reproduction
+    download:
+      kind: kaggle
+      slug: ltrngvinh/cicids2017-balanced-77feats
+    expected_files:
+      - cicids2017_balanced_77feats.csv
+    expected_shape: [137992, 78]
+    notes: "Exact balanced 77-feature file referenced by the cross-domain notebook."
+
+  cse_cic_ids2018_raw:
+    family: CIC-IDS
+    year: 2018
+    role: raw_rebuild
+    download:
+      kind: kaggle
+      slug: solarmainframe/ids-intrusion-csv
+    notes: "Large raw CSV mirror used by the original Kaggle notebook."
+
+  ciciot2023:
+    family: CIC-IoT
+    year: 2023
+    role: recommended_third_domain
+    official_url: https://www.unb.ca/cic/datasets/iotdataset-2023.html
+    download:
+      kind: kaggle
+      slug: himadri07/ciciot2023
+      mirror: true
+    label_adapter: ciciot2023
+    notes: "Recommended third domain. Official UNB page reports 33 attacks in 7 attack categories across 105 IoT devices."
+
+  unsw_nb15:
+    family: UNSW
+    year: 2015
+    role: diverse_external_domain
+    official_url: https://research.unsw.edu.au/projects/unsw-nb15-dataset
+    download:
+      kind: kaggle
+      slug: harshwardhanbhangale/unsw-complete-dataset
+      mirror: true
+    label_adapter: unsw_nb15
+    notes: "Useful heterogeneous non-CIC benchmark with author-provided train/test splits."
+
+  iot23:
+    family: Stratosphere-IoT
+    year: 2020
+    role: malware_iot_external_domain
+    official_url: https://www.stratosphereips.org/datasets-iot23
+    download:
+      kind: manual
+    label_adapter: iot23
+    notes: "Official site provides full and flow-only archives; large download, so this repo does not fetch it automatically."

@@ -1,0 +1,45 @@
+protocol: v0.5.2_E6_constraint_aware_dirty_baseline
+attack_scope: malicious_only
+space: normalized_model_input
+bounds_source: source_train
+mutable_semantic_features:
+  - backward_packets_per_second
+  - flow_packets_per_second
+  - forward_packets_per_second
+  - packet_length_max
+  - packet_length_mean
+  - packet_length_min
+  - packet_length_std
+raw_rules:
+  nonnegative:
+    - backward_packets_per_second
+    - flow_packets_per_second
+    - forward_packets_per_second
+    - packet_length_max
+    - packet_length_mean
+    - packet_length_min
+    - packet_length_std
+  ordered_triplet:
+    min: packet_length_min
+    mean: packet_length_mean
+    max: packet_length_max
+  nonnegative_std: packet_length_std
+  enforce_rate_sum_identity: false
+fgsm:
+  projected: true
+pgd:
+  projected: true
+  steps: 10
+  random_start: true
+  alpha_rule: epsilon_over_4
+epsilons: [0.0, 0.01, 0.03, 0.05, 0.10]
+adversarial_training:
+  enabled_variants: [mlp_at, mlp_dann_at]
+  epsilon_train: 0.03
+  clean_fraction: 0.5
+  adversarial_fraction: 0.5
+  attack: fgsm
+  source_labels_only: true
+  dann_lambda_d: 0.01
+  preserve_domain_loss_weight: true
+seeds: [42, 43, 44]

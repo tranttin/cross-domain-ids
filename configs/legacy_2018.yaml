@@ -1,0 +1,27 @@
+experiment: legacy_2018
+protocol: legacy
+seed: 42
+
+data:
+  dataset: cse_cic_ids2018_processed
+  processed_csv: data/processed/cleaned_data_sampled.csv
+  test_size: 0.2
+
+preprocessing:
+  variance_threshold: 0.01
+  robust_quantile_range: [5, 95]
+
+classical:
+  select_k_best: 30
+
+deep:
+  learning_rate: 0.0001
+  batch_size: 256
+  epochs: 50
+  early_stopping_patience: 6
+  reduce_lr_patience: 3
+
+reproduction:
+  # Intentionally true because the original notebook used the test set as
+  # Keras validation_data. Never copy this behavior into clean experiments.
+  use_test_as_validation: true

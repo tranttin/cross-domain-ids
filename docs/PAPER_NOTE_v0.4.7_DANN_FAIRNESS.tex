@@ -1,0 +1,11 @@
+% v0.4.7 paper note -- do not insert diagnostic numbers until mapping is verified
+\paragraph{Fair domain-adversarial control.}
+Before attributing third-domain degradation to negative transfer, we controlled for
+architecture and optimization differences between the source-only and DANN variants.
+The source-only and adversarial models therefore share the same canonical-feature MLP
+encoder and task head, while the DANN variant differs only by the gradient-reversal
+branch and domain classifier. Both variants use the same optimizer learning rate.
+We additionally include a zero-strength adversarial control ($\lambda_d=0$) to verify
+that attaching the inactive domain branch does not itself alter the transfer behavior.
+Only after this control is satisfied do we interpret changes at $\lambda_d>0$ as an
+effect of adversarial domain alignment.

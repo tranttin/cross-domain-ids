@@ -1,0 +1,46 @@
+experiment: clean_cross_domain
+protocol: clean_uda_balanced_source_v2
+seed: 42
+
+data:
+  cic2018_csv: data/processed/cleaned_data_sampled.csv
+  cic2017_csv: data/processed/cicids2017_balanced_77feats.csv
+  test_size: 0.2
+  validation_size: 0.1
+
+preprocessing:
+  variance_threshold: 0.01
+  robust_quantile_range: [5, 95]
+  feature_order: sorted
+  feature_alignment: exact
+  # Clean mode: selector/scaler are fitted on labelled SOURCE train only.
+  fit_reference_domain: source
+
+deep:
+  learning_rate: 0.001
+  dann_learning_rate: 0.0001
+  batch_size: 256
+  epochs: 30
+  patience: 5
+
+  # IMPORTANT: binary labels are collapsed from per-attack balanced multiclass data,
+  # so the resulting binary source data are strongly attack-majority. We correct the
+  # classification loss using weights computed from SOURCE TRAIN labels only.
+  class_weight_mode: balanced
+
+  # Start weaker than the legacy lambda=1.0. Override from CLI for controlled sweeps:
+  #   --lambda-d 0.1
+  #   --lambda-d 0.5
+  #   --lambda-d 1.0
+  lambda_d: 0.1
+  domain_loss_weight: 0.5
+
+evaluation:
+  # Threshold is selected ONLY on labelled source validation, never target labels.
+  # fixed_0.5 remains available for a conventional reference result.
+  threshold_strategy: source_val_macro_f1
+
+uda:
+  target_labels_used_for_training: false
+  target_labels_used_for_model_selection: false
+  source_class_weights_only: true

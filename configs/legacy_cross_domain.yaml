@@ -1,0 +1,31 @@
+experiment: legacy_cross_domain
+protocol: legacy_notebook
+seed: 42
+
+data:
+  cic2018_csv: data/processed/cleaned_data_sampled.csv
+  cic2017_csv: data/processed/cicids2017_balanced_77feats.csv
+  test_size: 0.2
+
+preprocessing:
+  variance_threshold: 0.01
+  robust_quantile_range: [5, 95]
+  # The original notebook created common columns via list(set17 & set18).
+  # This is intentionally non-deterministic across Python processes.
+  feature_order: legacy_set
+  # Critical notebook behavior: selector/scaler are always fit on 2018 train,
+  # even when 2017 is treated as the source domain.
+  fit_reference_domain: "2018"
+
+deep:
+  learning_rate: 0.001
+  dann_learning_rate: 0.0001
+  batch_size: 256
+  epochs: 20
+  lambda_d: 1.0
+  domain_loss_weight: 0.5
+
+reproduction:
+  supervised_target_labels_in_dann: true
+  test_2018_to_2017_on_full_2017: true
+  test_2017_to_2018_on_2018_holdout: true
